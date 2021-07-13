@@ -1,0 +1,17 @@
+version: '3.7'
+
+volumes:
+  packages:
+    driver: local
+
+services:
+  python:
+    build:
+      context: .
+    environment:
+      - ENV:dev
+    ports:
+      - "25:25"
+    volumes:
+      - packages:/usr/local/lib/python3.10/site-packages/
+      - .:/app
