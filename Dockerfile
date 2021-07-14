@@ -3,7 +3,7 @@
 FROM python:3.9.6
 
 LABEL author="Justin Casso <justincasso1@gmail.com>"
-LABEL description="An Postfix email server that uploads emails to an S3 bucket"
+LABEL description="A Postfix email server that uploads emails to an S3 bucket"
 LABEL version="0.1"
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -14,10 +14,13 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY . /app
+COPY config/master.cf /etc/postfix/master.cf
+COPY config/main.cf /etc/postfix/main.cf
+COPY requirements.txt /app/requirements.txt
+COPY upload.py /app/upload.py
 
 RUN pip install -r /app/requirements.txt
 
-CMD [ "/app/startup.sh" ]
+CMD [ "postfix", "start-fg" ]
 
-EXPOSE 25
+EXPOSE 25/tcp
