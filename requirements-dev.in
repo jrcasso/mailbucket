@@ -1,5 +1,6 @@
 bandit
 black
+boto3
 flake8
 pip-tools
 pytest

@@ -10,6 +10,12 @@ bandit==1.7.0
     # via -r requirements-dev.in
 black==21.9b0
     # via -r requirements-dev.in
+boto3==1.18.44
+    # via -r requirements-dev.in
+botocore==1.21.44
+    # via
+    #   boto3
+    #   s3transfer
 click==8.0.1
     # via
     #   black
@@ -22,6 +28,10 @@ gitpython==3.1.24
     # via bandit
 iniconfig==1.1.1
     # via pytest
+jmespath==0.10.0
+    # via
+    #   boto3
+    #   botocore
 mccabe==0.6.1
     # via flake8
 mypy-extensions==0.4.3
@@ -50,12 +60,18 @@ pyparsing==2.4.7
     # via packaging
 pytest==6.2.5
     # via -r requirements-dev.in
+python-dateutil==2.8.2
+    # via botocore
 pyyaml==5.4.1
     # via bandit
 regex==2021.8.28
     # via black
+s3transfer==0.5.0
+    # via boto3
 six==1.16.0
-    # via bandit
+    # via
+    #   bandit
+    #   python-dateutil
 smmap==4.0.0
     # via gitdb
 stevedore==3.4.0
@@ -70,6 +86,8 @@ typing-extensions==3.10.0.2
     # via
     #   black
     #   gitpython
+urllib3==1.26.6
+    # via botocore
 wheel==0.37.0
     # via pip-tools
 
