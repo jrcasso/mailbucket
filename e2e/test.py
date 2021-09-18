@@ -21,12 +21,13 @@ class Test:
 
     @pytest.fixture()
     def send_email(self):
-        with smtplib.SMTP(host=SMTP_HOST, port=SMTP_PORT) as smtp:
-            smtp.noop()
-            smtp.helo("foobar")
-            smtp.sendmail(
-                "alice@example.com", "bob@example.com", "This is a test message"
-            )
+        smtp = smtplib.SMTP(host=SMTP_HOST, port=SMTP_PORT)
+        smtp.noop()
+        smtp.helo("foobar")
+        smtp.sendmail(
+            "alice@example.com", "bob@example.com", "This is a test message"
+        )
+        smtp.quit()
 
     @pytest.fixture()
     def get_objects(self, s3_client):
