@@ -117,8 +117,38 @@ steps:
     - pip install -r requirements-dev.txt
     - pytest -s -v e2e/test.py
 
+
+---
+kind: pipeline
+type: docker
+name: Tag
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  event:
+    - tag
+
+steps:
+- name: "Image: mailbucket"
+  image: plugins/docker
+  depends_on: [ clone ]
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: jrcasso/mailbucket
+    dockerfile: ./Dockerfile
+    context: .
+    tags:
+    - latest
+    - "${DRONE_TAG}"
+
 ---
 kind: signature
-hmac: cc92498314ebf061bed600c25a3c2742cd7f4a8443f2419dac52b4dc48c5b951
+hmac: 5cb9a401ff6edb5df93314c5eca280165597835826b9f4c4754201327660eec6
 
 ...
