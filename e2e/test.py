@@ -40,7 +40,6 @@ class Test:
 
     @pytest.fixture()
     def delete_objects(self, s3_client):
-        print("preparing delete_objects")
         objects = s3_client.list_objects(Bucket="mailbucket")["Contents"]
         s3_client.delete_objects(
             Bucket="mailbucket",
@@ -49,6 +48,7 @@ class Test:
 
     def test_email_upload(self, send_email, get_objects, delete_objects):
         assert len(get_objects[0]) == 1
-        assert "From: alice@example.com" in get_objects[1]
+        assert "alice@example.com" in get_objects[1]
+        assert "bob@example.com" in get_objects[1]
         assert "foobar" in get_objects[1]
         assert "This is a test message" in get_objects[1]
