@@ -125,4 +125,4 @@ mailman   unix  -       n       n       -       -       pipe
   flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
   ${nexthop} ${user}
 upload    unix  -       n       n       -       -       pipe
-  flags=FR user=nobody argv=/usr/local/bin/python /app/upload.py
+  flags=FR user=nobody argv=/usr/local/bin/python /app/upload.py ${queue_id}

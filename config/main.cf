@@ -41,7 +41,9 @@ maillog_file=/dev/stdout
 
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
-mydestination = $myhostname, mailbucket, localhost.localdomain, localhost
+export_environment = AWS_ACCESS_KEY_ID AWS_REGION AWS_SECRET_ACCESS_KEY ENV S3_BUCKET
+import_environment = AWS_ACCESS_KEY_ID AWS_REGION AWS_SECRET_ACCESS_KEY ENV S3_BUCKET
+mydestination = $myhostname mailbucket localhost.localdomain localhost
 relayhost =
 mailbox_size_limit = 0
 recipient_delimiter = +
