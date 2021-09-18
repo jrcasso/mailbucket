@@ -3,8 +3,6 @@ version: '3.7'
 volumes:
   packages:
     driver: local
-  localstack:
-    driver: local
 
 services:
   python:
@@ -31,5 +29,4 @@ services:
       - SERVICES=s3
       - DATA_DIR=/tmp/localstack
     volumes:
-      - "localstack:/tmp/localstack"
       - "./aws/:/docker-entrypoint-initaws.d/"
