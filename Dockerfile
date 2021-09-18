@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.0
 # Consider using 3.9.6-slim for production usage
-FROM python:3.9.6
+FROM python:3.9.6-buster
 
 LABEL author="Justin Casso <justincasso1@gmail.com>"
 LABEL description="A Postfix email server that uploads emails to an S3 bucket"
