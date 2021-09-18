@@ -3,15 +3,32 @@ version: '3.7'
 volumes:
   packages:
     driver: local
+  localstack:
+    driver: local
 
 services:
   python:
     build:
       context: .
     environment:
-      - ENV:dev
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - ENV=dev
+      - S3_BUCKET=${S3_BUCKET}
     ports:
       - "25:25"
     volumes:
       - packages:/usr/local/lib/python3.10/site-packages/
       - .:/app
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - SERVICES=s3
+      - DATA_DIR=/tmp/localstack
+    volumes:
+      - "localstack:/tmp/localstack"
+      - "./docker-entrypoint-initaws.d:/docker-entrypoint-initaws.d"
