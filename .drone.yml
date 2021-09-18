@@ -1,0 +1,124 @@
+---
+kind: pipeline
+type: docker
+name: Inspect
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  event:
+    - pull_request
+    - push
+
+steps:
+- name: "Lint: flake8"
+  image: python:3.9.6
+  depends_on: ["clone"]
+  commands:
+    - pip install flake8
+    - flake8
+
+- name: "Lint: black"
+  image: python:3.9.6
+  depends_on: ["clone"]
+  commands:
+    - pip install black
+    - black .
+
+- name: "Scan: bandit"
+  image: python:3.9.6
+  depends_on: ["clone"]
+  commands:
+    - pip install bandit
+    - bandit upload.py
+
+---
+kind: pipeline
+type: docker
+name: Build
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  event:
+    - pull_request
+    - push
+
+steps:
+- name: "Image: mailbucket"
+  image: plugins/docker
+  depends_on: [ clone ]
+  when:
+    event:
+      exclude:
+      - pull_request
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: jrcasso/mailbucket
+    dockerfile: ./Dockerfile
+    context: .
+    tags:
+    - "${CI_COMMIT_SHA}"
+    - "${DRONE_BRANCH}"
+
+---
+kind: pipeline
+type: docker
+name: Integrate
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  event:
+    - pull_request
+    - push
+
+depends_on:
+  - "Build"
+
+services:
+  - name: localstack
+    image: localstack/localstack
+    environment:
+      SERVICES: s3
+      DATA_DIR: /tmp/localstack
+
+  - name: mailbucket
+    image: "jrcasso/mailbucket:${CI_COMMIT_SHA}"
+    environment:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      ENV: dev
+      S3_BUCKET: mailbucket
+
+steps:
+- name: "e2e: pytest"
+  image: "jrcasso/mailbucket:${CI_COMMIT_SHA}"
+  depends_on: ["clone", "localstack", "mailbucket"]
+  environment:
+    AWS_ACCESS_KEY_ID: test
+    AWS_SECRET_ACCESS_KEY: test
+    ENV: dev
+    S3_BUCKET: mailbucket
+    SMTP_HOST: mailbucket
+  commands:
+    - sleep 20
+    - pip install awscli
+    - aws --endpoint-url=http://localstack:4566 s3 mb s3://mailbucket/
+    - pip install -r requirements-dev.txt
+    - pytest -s -v e2e/test.py
+
+---
+kind: signature
+hmac: cc92498314ebf061bed600c25a3c2742cd7f4a8443f2419dac52b4dc48c5b951
+
+...

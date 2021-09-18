@@ -24,9 +24,7 @@ class Test:
         smtp = smtplib.SMTP(host=SMTP_HOST, port=SMTP_PORT)
         smtp.noop()
         smtp.helo("foobar")
-        smtp.sendmail(
-            "alice@example.com", "bob@example.com", "This is a test message"
-        )
+        smtp.sendmail("alice@example.com", "bob@example.com", "This is a test message")
         smtp.quit()
 
     @pytest.fixture()
