@@ -10,6 +10,7 @@ services:
   python:
     build:
       context: .
+    working_dir: /app
     environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
@@ -31,4 +32,4 @@ services:
       - DATA_DIR=/tmp/localstack
     volumes:
       - "localstack:/tmp/localstack"
-      - "./docker-entrypoint-initaws.d:/docker-entrypoint-initaws.d"
+      - "./aws/:/docker-entrypoint-initaws.d/"
