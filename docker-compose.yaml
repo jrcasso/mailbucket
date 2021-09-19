@@ -29,4 +29,4 @@ services:
       - SERVICES=s3
       - DATA_DIR=/tmp/localstack
     volumes:
-      - "./aws/:/docker-entrypoint-initaws.d/"
+      - "./scripts/s3-init.sh:/docker-entrypoint-initaws.d/s3-init.sh"
