@@ -27,6 +27,13 @@ steps:
     - pip install black
     - black .
 
+- name: "Lint: helm"
+  image: python:3.9.6
+  depends_on: ["clone"]
+  commands:
+    - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+    - helm lint helm/
+
 - name: "Scan: bandit"
   image: python:3.9.6
   depends_on: ["clone"]
@@ -149,6 +156,6 @@ steps:
 
 ---
 kind: signature
-hmac: 5cb9a401ff6edb5df93314c5eca280165597835826b9f4c4754201327660eec6
+hmac: 9fafcdedd275989bd751a9e0510f5bacc422cc0f41ce97131a810a7ee1873876
 
 ...
