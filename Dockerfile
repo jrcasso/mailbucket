@@ -14,6 +14,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+COPY scripts/healthcheck.sh /app/healthcheck.sh
 COPY config/master.cf /etc/postfix/master.cf
 COPY config/main.cf /etc/postfix/main.cf
 COPY requirements.txt /app/requirements.txt
