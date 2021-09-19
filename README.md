@@ -2,7 +2,10 @@
 
 # Mailbucket
 
-Mailbucket is a Postfix email server that will receive ingress emails and upload them to an AWS S3 bucket for later processing.
+Mailbucket is a Kubernetes-ready Postfix email server that will take received emails and upload them to an AWS S3 bucket for later processing or archive purposes.
+
+Please consider opening an issue if you have an additional use-case or feature request for mailbucket!
+
 
 # Configuration
 
@@ -15,7 +18,25 @@ The application utilizes the following environment variables:
 |AWS_REGION|`us-east-1`|
 |S3_BUCKET|*None*|
 
+# Installation
 
+Mailbucket can be easily installed in Kubernetes via its Helm chart. From the project root:
+
+```sh
+helm install mailbucket helm/ \
+    --set env.AWS_ACCESS_KEY_ID=AAAAAAAAAAAAAAAAAAAA \
+    --set env.AWS_SECRET_ACCESS_KEY=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA \
+    --set env.AWS_REGION=us-west-1 \
+    --set env.S3_BUCKET=my-mailbucket
+```
+
+`AWS_REGION` will default to `us-east-1` if no value is provided. All other configuration values are ***required***.
+
+Installing in this manner will configure a LoadBalancer service listening on port 8025. Port 8025 is used because AWS disables outbound SMTP traffic from EC2 instances by default (thank the email spammers for this policy). However, the listening port can be overridden with `--set service.port=25` during installation if your account has exemption.
+
+Mailbucket's Helm chart also supports Helm-native testing. Executing `helm test mailbucket` after installation will run a test pod to ensure mailbucket is actively available for SMTP sessions.
+
+---
 # Development Setup
 
 Ensure you have the following prerequisites satisfied:
